@@ -53,9 +53,6 @@
           <span class="pcard-body"><span class="meta" style="color:#8A5300">GUIDE · 25.05.2025</span>
           <h2>Défense de domicile en Belgique : Guide complet pour protéger légalement ton foyer</h2><span class="ex"> Sécurité ByD4v1dShootFirst 25 mai 202515 juin 2025 Face à l&amp;rsquo;augmentation des cambriolages et au sentiment d&amp;rsquo…</span></span></a>
 </div>
-<div class="news"><div><h2>Les nouveaux tests dans ta boîte mail</h2>
-    <p style="margin:6px 0 0;color:#4A525C">Un e-mail <b>uniquement quand un nouvel article sort</b>. Pas de calendrier, pas de spam.</p></div>
-    <form class="nl" data-endpoint="/api/subscribe"><input type="email" placeholder="Adresse e-mail" required><button>S’inscrire</button><span class="nlmsg"></span></form></div>
 <footer>
   <div class="fgrid">
     <div><h3>TIR &amp; DÉFENSE</h3>
@@ -72,23 +69,6 @@ document.querySelectorAll('[data-toggle="mnav"]').forEach(function(b){
     var open=m.hasAttribute('hidden');
     if(open){m.removeAttribute('hidden');}else{m.setAttribute('hidden','');}
     b.setAttribute('aria-expanded',open?'true':'false');
-  });
-});
-document.querySelectorAll('form.nl').forEach(function(f){
-  f.addEventListener('submit',async function(ev){
-    ev.preventDefault();
-    var msg=f.querySelector('.nlmsg');
-    var ep=f.getAttribute('data-endpoint');
-    var mail=f.querySelector('input[type=email]').value.trim();
-    if(!mail||mail.indexOf('@')<0){msg.textContent='Adresse e-mail invalide.';return;}
-    if(!ep){msg.textContent='Inscription bientôt disponible.';return;}
-    msg.textContent='Envoi…';
-    try{
-      var r=await fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:mail})});
-      var d=await r.json().catch(function(){return {};});
-      if(d.ok){f.reset();msg.textContent=d.message||'Merci ! Vérifie ta boîte mail.';}
-      else{msg.textContent=d.error||'Inscription indisponible pour le moment.';}
-    }catch(e){msg.textContent='Service inactif en préversion : il sera branché une fois déployé sur Cloudflare.';}
   });
 });
 </script></body></html>

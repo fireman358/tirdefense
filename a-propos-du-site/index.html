@@ -146,21 +146,4 @@ document.querySelectorAll('[data-toggle="mnav"]').forEach(function(b){
     b.setAttribute('aria-expanded',open?'true':'false');
   });
 });
-document.querySelectorAll('form.nl').forEach(function(f){
-  f.addEventListener('submit',async function(ev){
-    ev.preventDefault();
-    var msg=f.querySelector('.nlmsg');
-    var ep=f.getAttribute('data-endpoint');
-    var mail=f.querySelector('input[type=email]').value.trim();
-    if(!mail||mail.indexOf('@')<0){msg.textContent='Adresse e-mail invalide.';return;}
-    if(!ep){msg.textContent='Inscription bientôt disponible.';return;}
-    msg.textContent='Envoi…';
-    try{
-      var r=await fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:mail})});
-      var d=await r.json().catch(function(){return {};});
-      if(d.ok){f.reset();msg.textContent=d.message||'Merci ! Vérifie ta boîte mail.';}
-      else{msg.textContent=d.error||'Inscription indisponible pour le moment.';}
-    }catch(e){msg.textContent='Service inactif en préversion : il sera branché une fois déployé sur Cloudflare.';}
-  });
-});
 </script></body></html>

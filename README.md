@@ -14,26 +14,13 @@ Site statique de **Tir et Défense Belgique** — refonte « Piste D », génér
 npx wrangler deploy
 ```
 
-`wrangler.jsonc` sert le site en assets statiques et route `/api/*` vers le Worker (`src/index.js`).
+`wrangler.jsonc` sert uniquement des assets statiques : aucun Worker, aucune fonction serveur, aucune base de données.
 
-## Newsletter (Resend)
+## Ce qu'il n'y a pas (volontairement)
 
-Le formulaire poste sur `/api/subscribe`. Le Worker ajoute le contact à une audience Resend.
-
-Secrets à créer **une seule fois** :
-
-```bash
-npx wrangler secret put RESEND_API_KEY        # clé API Resend
-npx wrangler secret put RESEND_AUDIENCE_ID    # identifiant de l'audience Resend
-```
-
-Optionnel, pour un e-mail de bienvenue :
-
-```bash
-npx wrangler secret put RESEND_FROM           # ex. contact@tir-defense-belgique.be
-```
-
-Tant que les secrets ne sont pas posés, le formulaire répond « Inscription momentanément indisponible » — il n’échoue pas silencieusement.
+- **Aucune collecte d'e-mail.** Pas de newsletter, pas de formulaire d'inscription : rien à déclarer côté RGPD.
+- **Aucun analytics embarqué.** Pas de Google Tag Manager dans les pages de préversion.
+- **Aucun cookie de suivi** posé par le site lui-même.
 
 ## Préversion
 
