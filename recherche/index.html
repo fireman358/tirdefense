@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Recherche — Tir et Défense Belgique</title>
+<meta name="description" content="Rechercher un test ou un guide.">
+<meta property="og:title" content="Recherche — Tir et Défense Belgique">
+<meta property="og:description" content="Rechercher un test ou un guide.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+</head><body>
+<header>
+  <a class="logo" href="/">TIR &amp; DÉFENSE
+    <span class="flag"><span style="background:#000;outline:1px solid #3A4048"></span><span style="background:#FDDA24"></span><span style="background:#EF3340"></span></span></a>
+  <nav><a href="/tir/">Tir</a><a href="/defense/">Défense</a><a href="/securite/">Sécurité</a><a href="/survie/">Survie</a><a href="/methode/" >Méthodologie</a></nav>
+  <div style="display:flex;align-items:center;gap:10px">
+    <a class="iconbtn" href="/recherche/" aria-label="Rechercher un article" title="Rechercher">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+    </a>
+    <button class="burger" data-toggle="mnav" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+  </div>
+</header>
+<div id="mnav" class="mnav" hidden>
+  <a href="/tir/">Tir</a><a href="/defense/">Défense</a><a href="/securite/">Sécurité</a><a href="/survie/">Survie</a>
+  <a href="/methode/">Méthodologie</a><a href="/recherche/">Rechercher</a>
+</div>
+<div style="max-width:820px;margin:0 auto;padding:32px 64px 64px">
+      <h1 class="article-h1">Rechercher sur le site</h1>
+      <div class="searchbox"><input id="q" type="search" placeholder="point rouge, coffre-fort, licence…"><button onclick="run()">Rechercher</button></div>
+      <p id="count" class="mono" style="font-size:13px;color:#4A525C;margin-top:16px"></p>
+      <div class="results" id="res"></div></div>
+      <script>
+      let DATA=[];fetch('/data/search.json').then(r=>r.json()).then(d=>{DATA=d;const p=new URLSearchParams(location.search);if(p.get('q')){document.getElementById('q').value=p.get('q');run();}});
+      function run(){const q=document.getElementById('q').value.toLowerCase().trim();const res=document.getElementById('res');
+        if(!q){res.innerHTML='';document.getElementById('count').textContent='';return;}
+        const hits=DATA.filter(x=>(x.t+' '+x.k).toLowerCase().includes(q)).slice(0,30);
+        document.getElementById('count').textContent=hits.length+' résultat'+(hits.length>1?'s':'')+' pour « '+q+' »';
+        res.innerHTML=hits.map(h=>`<a class="acard" href="${h.u}"><span class="acard-meta">${h.c} · ${h.d}</span><span class="acard-title">${h.t}</span>${h.s?`<span class="score">${h.s}</span>`:''}</a>`).join('')||'<p style="color:#4A525C">Aucun résultat.</p>';}
+      document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')run();});
+      </script>
+<footer>
+  <div class="fgrid">
+    <div><h3>TIR &amp; DÉFENSE</h3>
+      <p style="font-size:15px;max-width:380px">Tests de matériel et guides du tir sportif en Belgique, par des tireurs licenciés.</p></div>
+    <div><p class="cat">Catégories</p><a href="/tir/">Tir</a><a href="/defense/">Défense</a><a href="/securite/">Sécurité</a><a href="/survie/">Survie</a></div>
+    <div><p class="cat">Le site</p><a href="/methode/">Notre méthode de test</a><a href="/affiliation-et-partenariats/">Affiliation et partenariats</a><a href="/a-propos-du-site/">À propos</a><a href="/avertissement/">Avertissement</a></div>
+  </div>
+  <div class="disclaimer">Contenu destiné à un public averti, informé de la législation sur les armes de son lieu de résidence. <a href="/avertissement/">Avertissement complet</a> · © 2026 Tir et Défense Belgique</div>
+</footer>
+<script>
+document.querySelectorAll('[data-toggle="mnav"]').forEach(function(b){
+  b.addEventListener('click',function(){
+    var m=document.getElementById('mnav');
+    var open=m.hasAttribute('hidden');
+    if(open){m.removeAttribute('hidden');}else{m.setAttribute('hidden','');}
+    b.setAttribute('aria-expanded',open?'true':'false');
+  });
+});
+document.querySelectorAll('form.nl').forEach(function(f){
+  f.addEventListener('submit',async function(ev){
+    ev.preventDefault();
+    var msg=f.querySelector('.nlmsg');
+    var ep=f.getAttribute('data-endpoint');
+    var mail=f.querySelector('input[type=email]').value.trim();
+    if(!mail||mail.indexOf('@')<0){msg.textContent='Adresse e-mail invalide.';return;}
+    if(!ep){msg.textContent='Inscription bientôt disponible : le formulaire n’est pas encore relié à un service.';return;}
+    msg.textContent='Envoi…';
+    try{
+      await fetch(ep,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:mail})});
+      f.reset();msg.textContent='Merci ! Vérifie ta boîte mail pour confirmer.';
+    }catch(e){msg.textContent='Erreur réseau, réessaie dans un instant.';}
+  });
+});
+</script></body></html>

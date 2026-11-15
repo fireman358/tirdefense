@@ -1,0 +1,6 @@
+/tir-sportif/*            /tir/:splat            301
+/protection-du-domicile/* /securite/:splat       301
+/accessoires/*            /tir/:splat            301
+/wp-login.php             /                      302
+/wp-admin/*               /                      302
+/author/*                 /auteur/               302
