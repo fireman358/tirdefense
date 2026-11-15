@@ -147,7 +147,7 @@
 </main></div>
 <div class="news"><div><h2>Les nouveaux tests dans ta boîte mail</h2>
     <p style="margin:6px 0 0;color:#4A525C">Un e-mail <b>uniquement quand un nouvel article sort</b>. Pas de calendrier, pas de spam.</p></div>
-    <form class="nl" data-endpoint=""><input type="email" placeholder="Adresse e-mail" required><button>S’inscrire</button><span class="nlmsg"></span></form></div>
+    <form class="nl" data-endpoint="/api/subscribe"><input type="email" placeholder="Adresse e-mail" required><button>S’inscrire</button><span class="nlmsg"></span></form></div>
 <footer>
   <div class="fgrid">
     <div><h3>TIR &amp; DÉFENSE</h3>
@@ -173,12 +173,14 @@ document.querySelectorAll('form.nl').forEach(function(f){
     var ep=f.getAttribute('data-endpoint');
     var mail=f.querySelector('input[type=email]').value.trim();
     if(!mail||mail.indexOf('@')<0){msg.textContent='Adresse e-mail invalide.';return;}
-    if(!ep){msg.textContent='Inscription bientôt disponible : le formulaire n’est pas encore relié à un service.';return;}
+    if(!ep){msg.textContent='Inscription bientôt disponible.';return;}
     msg.textContent='Envoi…';
     try{
-      await fetch(ep,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:mail})});
-      f.reset();msg.textContent='Merci ! Vérifie ta boîte mail pour confirmer.';
-    }catch(e){msg.textContent='Erreur réseau, réessaie dans un instant.';}
+      var r=await fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:mail})});
+      var d=await r.json().catch(function(){return {};});
+      if(d.ok){f.reset();msg.textContent=d.message||'Merci ! Vérifie ta boîte mail.';}
+      else{msg.textContent=d.error||'Inscription indisponible pour le moment.';}
+    }catch(e){msg.textContent='Service inactif en préversion : il sera branché une fois déployé sur Cloudflare.';}
   });
 });
 </script></body></html>
